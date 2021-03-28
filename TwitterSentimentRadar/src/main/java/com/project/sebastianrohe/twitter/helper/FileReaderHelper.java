@@ -12,16 +12,19 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class to manage reading from CSV files.
+ *
+ * @author Sebastian Rohe
+ */
 public class FileReaderHelper {
 
     /**
+     * This method reads in every line of a given csv file and converts it to a set of strings.
+     * Every string in the set represents a line of the original CSV file. Empty lines will be ignored.
+     *
      * @param filePath Path of csv file to read in.
      * @return Set of strings from all read in lines.
-     * @author Sebastian Rohe
-     *
-     * This method reads in every line of a given csv file and converts it to a set of strings.
-     * Every string in the set represents a line of the original csv file.
-     * Empty lines will be ignored.
      */
     public static Set<String> readInLineByLine(String filePath) {
         // tweet strings. Every string represents a read in line from the csv file.
@@ -50,12 +53,11 @@ public class FileReaderHelper {
     }
 
     /**
+     * This method takes in the path of a csv file, processes the resulting set of line strings (every line represents a tweet)
+     * from the readInLineByLine() method and converts every line string to an actual tweet object. Every tweet is stored in a set.
+     *
      * @param filePath Path of csv file to read in.
      * @return A set of all resulting tweet objects.
-     * @author Sebastian Rohe
-     * This method takes in the path of a csv file, processes the resulting set of line strings (every line represents
-     * a tweet) from the readInLineByLine() method and converts every line string to an actual tweet object.
-     * Every tweet is stored in a set.
      */
     public static Set<Tweet> convertReadInLines(String filePath) throws UIMAException {
         // Empty set will get filled with tweets.
@@ -67,7 +69,6 @@ public class FileReaderHelper {
         for (String tweetString : tweetStrings) {
             // If length of the line string is not 0 and the string contains tabs it is split in different string
             // parts with tabs as separators.
-
             if (tweetString.length() != 0 && tweetString.contains("\t")) {
                 String[] splitLine = tweetString.split("\t");
                 // Create tweet objects with string values from split method.
@@ -81,10 +82,8 @@ public class FileReaderHelper {
                 if (Boolean.parseBoolean(splitLine[5])) {
                     createdTweet.setRetweetId(Long.parseLong(splitLine[6]));
                 }
-
                 // Created tweet object is added to actualTweets set after every run of this foreach loop.
                 actualTweets.add(createdTweet);
-
             }
         }
         // At the end a set of all resulting tweets is returned.

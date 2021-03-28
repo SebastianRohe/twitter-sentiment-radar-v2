@@ -22,11 +22,11 @@ import java.util.List;
 public class NLPAnalysis {
 
     /**
-     * This method handles the NLP com.project.sebastianrohe.twitter.analysis of a given tweet document from the com.project.sebastianrohe.twitter.database.
+     * This method handles the NLP analysis of a given tweet document from the database.
      *
-     * @param tweetDocument  Tweet document which should be analysed (from com.project.sebastianrohe.twitter.database).
-     * @param analysisEngine Analyse engine with pipeline to run nlp.
-     * @return An analysed tweet document.
+     * @param tweetDocument  Tweet document which should be analysed (from database).
+     * @param analysisEngine Analysis engine with pipeline to run NLP.
+     * @return Analysed tweet document.
      * @throws UIMAException If something goes wrong.
      */
     public Document runNLP(Document tweetDocument, AnalysisEngine analysisEngine) throws UIMAException {
@@ -89,7 +89,7 @@ public class NLPAnalysis {
             }
         }
 
-        // Update the tweet document from the com.project.sebastianrohe.twitter.database with results of NLP com.project.sebastianrohe.twitter.analysis.
+        // Update the tweet document from the database with results of NLP analysis.
         Document analysedTweetDocument = tweetFromDatabase.getTweetDocument();
 
         analysedTweetDocument.put("sentiments", sentimentList);
@@ -100,7 +100,7 @@ public class NLPAnalysis {
         analysedTweetDocument.put("persons", personEntityList);
         analysedTweetDocument.put("locations", locationEntityList);
 
-        // Save serialized JCas in every document for com.project.sebastianrohe.twitter.database.
+        // Save serialized JCas in every document for database.
         analysedTweetDocument.put("uima", new JSONObject(MongoSerialization.serializeJCas(jCas)).toString());
 
         // Return analysed document.

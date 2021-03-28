@@ -19,10 +19,10 @@ public class MongoDBConnectionHandler {
 
     private MongoDatabase connectedDatabase;
     private MongoClient mongoClient;
-    private static MongoCollection<Document> myCollection;
+    private MongoCollection<Document> collection;
 
     /**
-     * Constructor to handle connection and communication with mongodb.
+     * Constructor.
      *
      * @param fileName File name of the properties file with login information to mongodb
      * @throws IOException If something goes wrong
@@ -32,22 +32,47 @@ public class MongoDBConnectionHandler {
         init(fileName);
     }
 
+    /**
+     * Method to get name of properties file.
+     *
+     * @return String.
+     */
     public String getFileName() {
         return this.fileName;
     }
 
+    /**
+     * Method to get connected database.
+     *
+     * @return MongoDatabase.
+     */
     public MongoDatabase getConnectedDatabase() {
         return this.connectedDatabase;
     }
 
+    /**
+     * Method to get client.
+     *
+     * @return MongoClient.
+     */
     public MongoClient getMongoClient() {
         return this.mongoClient;
     }
 
     /**
-     * Method to initialize com.project.sebastianrohe.twitter.database connection.
+     * Method to get collection from database.
      *
-     * @param fileName Name of the properties for com.project.sebastianrohe.twitter.database connection.
+     * @return Collection.
+     */
+    public MongoCollection<Document> getCollection() {
+        return this.collection;
+    }
+
+
+    /**
+     * Method to initialize database connection via Properties approach.
+     *
+     * @param fileName Name of the properties for database connection.
      * @throws IOException If something goes wrong.
      */
     @SuppressWarnings("deprecation")
@@ -55,16 +80,16 @@ public class MongoDBConnectionHandler {
         // Create new properties instance.
         Properties propMongo = new Properties();
         propMongo.load(new FileInputStream(fileName));
+
         MongoCredential credential = MongoCredential.createCredential(propMongo.getProperty("username"),
                 propMongo.getProperty("com/project/sebastianrohe/twitter/database"), propMongo.getProperty("password").toCharArray());
-
         MongoClientOptions options = MongoClientOptions.builder().sslEnabled(false).build();
+
         mongoClient = new MongoClient(new ServerAddress(propMongo.getProperty("host"),
                 Integer.parseInt(propMongo.getProperty("port"))), Collections.singletonList(credential), options);
         connectedDatabase = mongoClient.getDatabase(propMongo.getProperty("com/project/sebastianrohe/twitter/database"));
-
-        // Select collection 'Uebung2'.
-        myCollection = connectedDatabase.getCollection("Uebung2");
+        // Select collection.
+        collection = connectedDatabase.getCollection("Uebung2");
         // Inform that Connection to mongodb was successful.
         System.out.println("Connection to MongoDB successful.");
     }
@@ -105,7 +130,7 @@ public class MongoDBConnectionHandler {
         whereQuery.put("_id", tweet.getId());
 
         // Iterator to check in collection.
-        FindIterable<Document> iterator = myCollection.find(whereQuery);
+        FindIterable<Document> iterator = collection.find(whereQuery);
 
         // Variable tweetAlreadyInDatabase is 'false' by default.
         // This means the tweet is not in the collection.
@@ -113,8 +138,9 @@ public class MongoDBConnectionHandler {
 
         // If one or more documents with given id are found by iterator, tweetAlreadyInDatabase is set to 'true'.
         // This means the tweet is already inside the collection.
-        for (Document ignored : iterator)
+        for (Document ignored : iterator) {
             tweetAlreadyInDatabase = true;
+        }
 
         return tweetAlreadyInDatabase;
     }
@@ -140,9 +166,8 @@ public class MongoDBConnectionHandler {
             // Tweet object is converted to tweet document.
             tweetDocumentToInsert = convertToMongoDocument(tweet);
             // Insert resulting tweet document in collection.
-            myCollection.insertOne(tweetDocumentToInsert);
+            collection.insertOne(tweetDocumentToInsert);
         }
-
         return tweetDocumentToInsert;
     }
 
@@ -159,25 +184,16 @@ public class MongoDBConnectionHandler {
             Document insertDocument = insertTweetDocument(tweet);
 
             // If document is empty.
-            if (insertDocument == null)
+            if (insertDocument == null) {
                 // Give information when tweet is already in the com.project.sebastianrohe.twitter.database.
                 System.err.println("Error: Already in com.project.sebastianrohe.twitter.database... " + tweet);
-
-            else
+            }
+            else {
                 // Give information when tweet is not already and com.project.sebastianrohe.twitter.database and is added to it.
                 System.out.println("Success: Added to com.project.sebastianrohe.twitter.database... " + tweet);
+            }
         }
-
         System.out.println("Process completed.");
-    }
-
-    /**
-     * Get collection from mongodb.
-     *
-     * @return Collection.
-     */
-    public static MongoCollection<Document> getMyCollection() {
-        return myCollection;
     }
 
     /**
@@ -189,8 +205,8 @@ public class MongoDBConnectionHandler {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.put("_id", analysedTweetDocument.get("_id"));
 
-        // Update (replace) document which was found with where query with the results of nlp com.project.sebastianrohe.twitter.analysis.
-        MongoDBConnectionHandler.getMyCollection().replaceOne(whereQuery, analysedTweetDocument);
+        // Update (replace) document which was found with where query with the results of NLP analysis.
+        getCollection().replaceOne(whereQuery, analysedTweetDocument);
     }
 
 }

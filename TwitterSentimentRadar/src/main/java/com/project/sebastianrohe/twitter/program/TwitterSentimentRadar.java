@@ -39,12 +39,7 @@ public class TwitterSentimentRadar {
         // Create instance of classes to access all required methods and variables.
         MongoDBConnectionHandler mongoDBConnectionHandler = new MongoDBConnectionHandler(mongoPropertiesPath);
         TwitterSentimentRadar twitterSentimentRadar = new TwitterSentimentRadar(filePath);
-
         TweetService services = new TweetService();
-        NLPAnalysis nlpAnalysis = new NLPAnalysis();
-
-        // Provide analyse engine with pipeline.
-        NLPHelper nlpHelper = new NLPHelper();
 
         // User input is empty string by default.
         String userInput = "";
@@ -80,13 +75,17 @@ public class TwitterSentimentRadar {
                 // Analyse all tweet documents in com.project.sebastianrohe.twitter.database collection which are not already analyzed.
                 case "analyse":
 
+                    NLPAnalysis nlpAnalysis = new NLPAnalysis();
+                    // Provide analyse engine with pipeline.
+                    NLPHelper nlpHelper = new NLPHelper();
+
                     // Iterator to get everything in com.project.sebastianrohe.twitter.database collection.
-                    FindIterable<Document> documentIterator = MongoDBConnectionHandler.getMyCollection().find();
+                    FindIterable<Document> documentIterator = mongoDBConnectionHandler.getCollection().find();
 
                     // Create analyse engine with pipeline once.
-                    AnalysisEngine analysisEngine = nlpHelper.getEngine();
+                    AnalysisEngine analysisEngine = nlpHelper.getAnalysisEngine();
 
-                    // For each found tweet document (by the iterator) in the com.project.sebastianrohe.twitter.database collection do the following.
+                    // For each found tweet document (by the iterator) in the database collection do the following.
                     for (Document tweetDocument : documentIterator) {
                         // If tweetDocument is not nlp analysed yet, analyse it. Check if document already has
                         // key 'sentiments' inside it. The key check is null if tweet document was not analysed yet.
@@ -94,18 +93,18 @@ public class TwitterSentimentRadar {
                             // Analyse tweet document and return resulting document and save it in variable.
                             Document analysedTweetDocument = nlpAnalysis.runNLP(tweetDocument, analysisEngine);
 
-                            // Update the tweet document in com.project.sebastianrohe.twitter.database collection with result of NLP com.project.sebastianrohe.twitter.analysis.
+                            // Update the tweet document in database collection with result of NLP analysis.
                             mongoDBConnectionHandler.updateWithNLPAnalysedDocument(analysedTweetDocument);
-                            System.out.println("Tweet analysed successfully. Tweet document updated in com.project.sebastianrohe.twitter.database... " + analysedTweetDocument);
+                            System.out.println("Tweet analysed successfully. Tweet document updated in database... " + analysedTweetDocument);
                         }
 
                         // If tweet document is not analysed yet inform which tweet documents are already analysed.
                         else {
-                            System.err.println("Tweet already analysed in com.project.sebastianrohe.twitter.database... " + tweetDocument);
+                            System.err.println("Tweet already analysed in database... " + tweetDocument);
                         }
                     }
 
-                    System.out.println("NLP com.project.sebastianrohe.twitter.analysis completed.");
+                    System.out.println("NLP analysis completed.");
 
                     break;
 
@@ -151,10 +150,10 @@ public class TwitterSentimentRadar {
                             // User input is the user string to look for.
                             String userNameToLookFor = inputScanner.next();
 
-                            // Filter for the username string the com.project.sebastianrohe.twitter.program user entered. Look in Username field of every tweet.
+                            // Filter for the username string the program user entered. Look in Username field of every tweet.
                             twitterSentimentRadar.getUserObjectsSet().stream().filter(user -> user.getUsername().equals(userNameToLookFor))
                                     // Use stream and lambda expression to sort tweets of user by date. Comparing by date.
-                                    .forEach(user -> user.getTweets().stream().sorted(Comparator.comparing(Tweet::getDate))
+                                    .forEach(user -> user.getTweetsByUser().stream().sorted(Comparator.comparing(Tweet::getDate))
                                             // Add found tweets sorted by date to the set of all tweets by a user.
                                             .forEach(tweetsByUserSet::add));
 
@@ -172,7 +171,7 @@ public class TwitterSentimentRadar {
                             } else if (tweetsByUserSet.size() == 0) {
                                 System.err.println("No tweets found for username " + "'" + userNameToLookFor + "'");
 
-                                // Otherwise print out every tweet for the specific user.
+                            // Otherwise print out every tweet for the specific user.
                             } else {
                                 // Print out every tweet for each tweet in the set of all tweets by a user.
                                 for (Tweet userTweet : tweetsByUserSet)
@@ -313,7 +312,7 @@ public class TwitterSentimentRadar {
     }
 
     /**
-     * Constructor expects file path and runs init() method to read in tweets and users from a csv file.
+     * Constructor expects file path and runs init() method to read in tweets and users from a CSV file.
      *
      * @param filePath Path to the csv file which should be processed.
      * @throws UIMAException If something goes wrong.
@@ -324,7 +323,7 @@ public class TwitterSentimentRadar {
     }
 
     /**
-     * Method to fill set of tweet objects tweets and set of user objects with created users from csv file.
+     * Method to fill set of tweet objects tweets and set of user objects with created users from CSV file.
      *
      * @throws UIMAException If something goes wrong.
      */
@@ -347,9 +346,11 @@ public class TwitterSentimentRadar {
 
             // Initialize a new user object everytime and insert the username string as parameter for username.
             UserImpl user = new UserImpl(userNameString);
+
             // Add the set of all tweets by a user to the user object.
             // The addMultipleTweetsToUser() method adds the tweets to a user.
             user.addMultipleTweetsToUser(tweetsOfUserSet);
+
             // Insert every single user object with a username and a set of tweets in the set of all user objects.
             userObjectsSet.add(user);
         }
@@ -362,7 +363,7 @@ public class TwitterSentimentRadar {
 
     }
 
-    // Getter methods for the attributes of the TwitterSentimentRadar class.
+    // Getter methods for the attributes of TwitterSentimentRadar class.
     public Set<UserImpl> getUserObjectsSet() {
         return userObjectsSet;
     }

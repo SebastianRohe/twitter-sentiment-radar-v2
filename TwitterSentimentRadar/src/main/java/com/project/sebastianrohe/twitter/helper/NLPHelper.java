@@ -29,18 +29,19 @@ public class NLPHelper {
             pipeline.add(createEngineDescription(TextBlobSentiment.class));
 
             // Create an AnalysisEngine for running the pipeline.
-            analysisEngine = pipeline.createAggregate();
+            this.analysisEngine = pipeline.createAggregate();
+
         } catch (ResourceInitializationException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Method to return the com.project.sebastianrohe.twitter.analysis engine.
+     * Method to get the analysis engine.
      *
-     * @return Analysis engine
+     * @return Analysis engine.
      */
-    public AnalysisEngine getEngine() {
+    public AnalysisEngine getAnalysisEngine() {
         return this.analysisEngine;
     }
 

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Uebung2Zweitloesung" />
         <module name="Uebung1Zweitloesung" />
+        <module name="TwitterSentimentRadar" />
         <module name="Uebung2_Zweitloesung" />
       </profile>
     </annotationProcessing>

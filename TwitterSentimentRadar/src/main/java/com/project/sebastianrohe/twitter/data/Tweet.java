@@ -6,42 +6,19 @@ import org.apache.uima.jcas.JCas;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * Interface to represent tweet.
+ *
+ * @author Sebastian Rohe
+ */
 public interface Tweet extends Comparable<Tweet> {
 
     /**
-     * Get ID of Tweet.
+     * Get id of tweet.
      *
      * @return long
      */
     long getId();
-
-    /**
-     * Get content of tweet.
-     *
-     * @return String
-     */
-    String getText();
-
-    /**
-     * Get username of the owner.
-     *
-     * @return String
-     */
-    String getUser();
-
-    /**
-     * Get the retweeted tweet, if existing.
-     *
-     * @return Tweet
-     */
-    Boolean getRetweet();
-
-    /**
-     * Get language of Tweet.
-     *
-     * @return String
-     */
-    String getLanguage();
 
     /**
      * Get the creation date of tweet.
@@ -51,6 +28,34 @@ public interface Tweet extends Comparable<Tweet> {
     Date getDate();
 
     /**
+     * Get username of the creator.
+     *
+     * @return String.
+     */
+    String getUser();
+
+    /**
+     * Get language of tweet.
+     *
+     * @return String.
+     */
+    String getLanguage();
+
+    /**
+     * Get text of tweet.
+     *
+     * @return String.
+     */
+    String getText();
+
+    /**
+     * Method to determinate if a tweet is a retweet. If true tweet is retweet.
+     *
+     * @return Boolean retweet value.
+     */
+    Boolean getRetweet();
+
+    /**
      * Get the retweet id of tweet.
      *
      * @return Retweet id.
@@ -58,23 +63,24 @@ public interface Tweet extends Comparable<Tweet> {
     long getRetweetId();
 
     /**
-     * Convert tweet text to JCas.
+     * Method to set the retweet id with other value than default value -1.
      *
-     * @return JCas
+     * @param id Id to set to.
+     */
+    void setRetweetId(long id);
+
+    /**
+     * Create JCas from tweet text and language.
+     *
+     * @return JCas.
      */
     JCas toJCas() throws UIMAException;
 
     /**
      * Method to return all used hashtags from a tweet.
      *
-     * @return Set<String> Set of hashtags strings.
+     * @return Set of hashtags strings.
      */
     Set<String> getHashtags();
 
-    /**
-     * Method to set the retweet id with other value than default value -1.
-     *
-     * @param id Id to be set.
-     */
-    void setRetweetId(long id);
 }

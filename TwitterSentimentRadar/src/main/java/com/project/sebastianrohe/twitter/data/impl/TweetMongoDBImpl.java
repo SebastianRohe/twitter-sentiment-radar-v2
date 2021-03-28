@@ -11,20 +11,29 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Class to describe a tweet from the com.project.sebastianrohe.twitter.database.
+ * Class to describe a tweet as document from the database.
  */
 public class TweetMongoDBImpl implements Tweet {
 
-    // Attribute should contains document from com.project.sebastianrohe.twitter.database.
+    // Attribute containing document from database.
     Document tweetDocument;
 
     /**
      * Constructor.
      *
-     * @param tweetDocument Actual document from com.project.sebastianrohe.twitter.database which represents tweet.
+     * @param tweetDocument Actual document from database which represents tweet.
      */
     public TweetMongoDBImpl(Document tweetDocument) {
         this.tweetDocument = tweetDocument;
+    }
+
+    /**
+     * Method to get document attribute.
+     *
+     * @return Document.
+     */
+    public Document getTweetDocument() {
+        return this.tweetDocument;
     }
 
     @Override
@@ -33,8 +42,8 @@ public class TweetMongoDBImpl implements Tweet {
     }
 
     @Override
-    public String getText() {
-        return tweetDocument.getString("text");
+    public Date getDate() {
+        return tweetDocument.getDate("date");
     }
 
     @Override
@@ -43,18 +52,18 @@ public class TweetMongoDBImpl implements Tweet {
     }
 
     @Override
-    public Boolean getRetweet() {
-        return tweetDocument.getBoolean("retweet");
-    }
-
-    @Override
     public String getLanguage() {
         return tweetDocument.getString("language");
     }
 
     @Override
-    public Date getDate() {
-        return null;
+    public String getText() {
+        return tweetDocument.getString("text");
+    }
+
+    @Override
+    public Boolean getRetweet() {
+        return tweetDocument.getBoolean("retweet");
     }
 
     @Override
@@ -62,24 +71,26 @@ public class TweetMongoDBImpl implements Tweet {
         return tweetDocument.getLong("retweetId");
     }
 
-    @Override
-    public JCas toJCas() throws UIMAException {
-        // This filters problematic characters.
-        Pattern charFilter = Pattern.compile("[^\\x{00}-\\x{024F}]");
-        String tweetText = charFilter.matcher(this.getText()).replaceAll("");
-
-        JCas jCas = JCasFactory.createText(tweetText, this.getLanguage());
-        return jCas;
-    }
-
-    @Override
-    public Set<String> getHashtags() {
-        return null;
-    }
-
+    // ToDo ...
     @Override
     public void setRetweetId(long id) {
 
+    }
+
+    @Override
+    public JCas toJCas() throws UIMAException {
+        // Pattern to filter for problematic characters.
+        Pattern charFilter = Pattern.compile("[^\\x{00}-\\x{024F}]");
+        String tweetText = charFilter.matcher(this.getText()).replaceAll("");
+
+        // Return JCas created from tweet text and language.
+        return JCasFactory.createText(tweetText, this.getLanguage());
+    }
+
+    // ToDo ...
+    @Override
+    public Set<String> getHashtags() {
+        return null;
     }
 
     @Override
@@ -87,7 +98,4 @@ public class TweetMongoDBImpl implements Tweet {
         return this.getDate().compareTo(tweet.getDate());
     }
 
-    public Document getTweetDocument() {
-        return this.tweetDocument;
-    }
 }
