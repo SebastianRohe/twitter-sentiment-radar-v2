@@ -82,12 +82,12 @@ public class MongoDBConnectionHandler {
         propMongo.load(new FileInputStream(fileName));
 
         MongoCredential credential = MongoCredential.createCredential(propMongo.getProperty("username"),
-                propMongo.getProperty("com/project/sebastianrohe/twitter/database"), propMongo.getProperty("password").toCharArray());
+                propMongo.getProperty("database"), propMongo.getProperty("password").toCharArray());
         MongoClientOptions options = MongoClientOptions.builder().sslEnabled(false).build();
 
         mongoClient = new MongoClient(new ServerAddress(propMongo.getProperty("host"),
                 Integer.parseInt(propMongo.getProperty("port"))), Collections.singletonList(credential), options);
-        connectedDatabase = mongoClient.getDatabase(propMongo.getProperty("com/project/sebastianrohe/twitter/database"));
+        connectedDatabase = mongoClient.getDatabase(propMongo.getProperty("database"));
         // Select collection.
         collection = connectedDatabase.getCollection("Uebung2");
         // Inform that Connection to mongodb was successful.
@@ -174,7 +174,7 @@ public class MongoDBConnectionHandler {
     /**
      * Method to insert many tweets in the mongodb.
      *
-     * @param tweetObjectsSet Set of tweet objects which where created with the com.project.sebastianrohe.twitter.data from the read in csv file.
+     * @param tweetObjectsSet Set of tweet objects which where created with the data from the read in csv file.
      * @throws UIMAException If something goes wrong.
      */
     public void insertManyTweetDocuments(Set<Tweet> tweetObjectsSet) throws UIMAException {
@@ -185,12 +185,12 @@ public class MongoDBConnectionHandler {
 
             // If document is empty.
             if (insertDocument == null) {
-                // Give information when tweet is already in the com.project.sebastianrohe.twitter.database.
-                System.err.println("Error: Already in com.project.sebastianrohe.twitter.database... " + tweet);
+                // Give information when tweet is already in the database.
+                System.err.println("Error: Already in database... " + tweet);
             }
             else {
-                // Give information when tweet is not already and com.project.sebastianrohe.twitter.database and is added to it.
-                System.out.println("Success: Added to com.project.sebastianrohe.twitter.database... " + tweet);
+                // Give information when tweet is not already and database and is added to it.
+                System.out.println("Success: Added to database... " + tweet);
             }
         }
         System.out.println("Process completed.");

@@ -1,7 +1,5 @@
 package com.project.sebastianrohe.twitter.data;
 
-import com.project.sebastianrohe.twitter.data.impl.TweetImpl;
-
 import java.util.Set;
 
 /**

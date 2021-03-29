@@ -28,7 +28,7 @@ public class TwitterSentimentRadar {
     /**
      * Main() method to run all functionalities of the twitter sentiment radar.
      *
-     * @param args Parameters which can be handed at com.project.sebastianrohe.twitter.program start.
+     * @param args Parameters which can be handed at program start.
      * @throws IOException If something goes wrong.
      */
     public static void main(String[] args) throws IOException, UIMAException {
@@ -72,14 +72,14 @@ public class TwitterSentimentRadar {
 
                     break;
 
-                // Analyse all tweet documents in com.project.sebastianrohe.twitter.database collection which are not already analyzed.
+                // Analyse all tweet documents in database collection which are not already analyzed.
                 case "analyse":
 
                     NLPAnalysis nlpAnalysis = new NLPAnalysis();
                     // Provide analyse engine with pipeline.
                     NLPHelper nlpHelper = new NLPHelper();
 
-                    // Iterator to get everything in com.project.sebastianrohe.twitter.database collection.
+                    // Iterator to get everything in database collection.
                     FindIterable<Document> documentIterator = mongoDBConnectionHandler.getCollection().find();
 
                     // Create analyse engine with pipeline once.
