@@ -60,41 +60,23 @@
             <name>Maven Plugin Repository</name>
             <url>https://repo1.maven.org/maven2</url>
         </repository>
-
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.7</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.github.texttechnologylab</groupId>
             <artifactId>TextImagerSpacy</artifactId>
             <version>0.2</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.7</version>
-        </dependency>
-
-        <!--Quite useful and effective package for using UIMA documents in databases.-->
         <dependency>
             <groupId>com.github.texttechnologylab</groupId>
             <artifactId>UIMADatabaseInterface</artifactId>
             <version>e6638b6ece</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.texttechnologylab.textimager-uima</groupId>
-            <artifactId>textimager-uima-types</artifactId>
-            <version>${textimager.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.texttechnologylab.textimager-uima</groupId>
@@ -131,7 +113,6 @@
             <artifactId>json</artifactId>
             <version>20200518</version>
         </dependency>
-
     </dependencies>
 
 </project>
