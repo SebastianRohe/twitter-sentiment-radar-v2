@@ -26,13 +26,13 @@ public class TwitterSentimentRadar {
     private static Set<Tweet> tweetObjectsSet = new HashSet<>();
 
     /**
-     * Main() method to run all functionalities of the twitter sentiment radar.
+     * Main() method to run all functionalities of the application.
      *
      * @param args Parameters which can be handed at program start.
      * @throws IOException If something goes wrong.
      */
     public static void main(String[] args) throws IOException, UIMAException {
-        // Paths for csv file and properties file for MongoDB.
+        // Paths for CSV file and Properties file for MongoDB.
         filePath = "src/main/resources/twitter.csv";
         mongoPropertiesPath = "src/main/resources/MongoDBConfig.properties";
 
@@ -63,16 +63,16 @@ public class TwitterSentimentRadar {
             // Switch statement to handle valid inputs.
             switch (userInput) {
 
-                // Import all read in tweets from a csv file (stored in tweetObjectsSet) to the mongodb.
+                // Import all read tweets from a CSV file (stored in tweetObjectsSet) to the MongoDB.
                 case "import":
 
                     System.out.println("Tweets getting inserted in MongoDB...");
-                    // Call of the insertManyTweetDocuments() method from the mongoDBConnectionHandler.
+                    // Call of the insertManyTweetDocuments() method from mongoDBConnectionHandler.
                     mongoDBConnectionHandler.insertManyTweetDocuments(tweetObjectsSet);
 
                     break;
 
-                // Analyse all tweet documents in database collection which are not already analyzed.
+                // Analyse all tweet documents in database collection which are not already analysed.
                 case "analyse":
 
                     NLPAnalysis nlpAnalysis = new NLPAnalysis();
@@ -87,10 +87,10 @@ public class TwitterSentimentRadar {
 
                     // For each found tweet document (by the iterator) in the database collection do the following.
                     for (Document tweetDocument : documentIterator) {
-                        // If tweetDocument is not nlp analysed yet, analyse it. Check if document already has
+                        // If tweetDocument is not NLP analysed yet, analyse it. Check if document already has
                         // key 'sentiments' inside it. The key check is null if tweet document was not analysed yet.
                         if (tweetDocument.get("sentiments") == null) {
-                            // Analyse tweet document and return resulting document and save it in variable.
+                            // Analyse tweet document, return resulting document and save it in variable.
                             Document analysedTweetDocument = nlpAnalysis.runNLP(tweetDocument, analysisEngine);
 
                             // Update the tweet document in database collection with result of NLP analysis.
@@ -120,14 +120,14 @@ public class TwitterSentimentRadar {
 
                     switch (userInput) {
 
-                        // Get all usernames in alphabetical order.
+                        // Get all usernames in alphanumerical order.
                         case "users":
 
-                            // Method to get all user from TweetService class to get a unsorted set of user strings.
+                            // Method to get all users from instance of TweetService class to get a unsorted set of user strings.
                             Set<String> unsortedSetOfUsers = services.getAllUsers(tweetObjectsSet);
-                            // Convert set of all users strings to list of users strings.
+                            // Convert set of all users strings to list of user strings.
                             List<String> listOfUsers = new ArrayList<>(unsortedSetOfUsers);
-                            // Sort list of user strings alphabetically. Comparing strings in list with each other.
+                            // Sort list of user strings alphanumerical. Comparing strings in list with each other.
                             listOfUsers.sort(String::compareTo);
 
                             // Print out every user for each user string in the list of all user strings.
@@ -150,7 +150,7 @@ public class TwitterSentimentRadar {
                             // User input is the user string to look for.
                             String userNameToLookFor = inputScanner.next();
 
-                            // Filter for the username string the program user entered. Look in Username field of every tweet.
+                            // Filter for the username string the program user entered. Look in username field of every tweet.
                             twitterSentimentRadar.getUserObjectsSet().stream().filter(user -> user.getUsername().equals(userNameToLookFor))
                                     // Use stream and lambda expression to sort tweets of user by date. Comparing by date.
                                     .forEach(user -> user.getTweetsByUser().stream().sorted(Comparator.comparing(Tweet::getDate))
@@ -161,11 +161,12 @@ public class TwitterSentimentRadar {
                             if (userNameToLookFor.equals("all")) {
                                 // If input is 'all' all tweets sorted by date will be returned.
                                 List<Tweet> allTweetsList = new ArrayList<>(tweetObjectsSet);
-                                // Sort resulting list by date. Use of the Comparable <Tweet> interface see Tweet class.
+                                // Sort resulting list by date. Use of the Comparable <Tweet> interface see Tweet interface.
                                 Collections.sort(allTweetsList);
 
-                                for (Tweet tweet : allTweetsList)
+                                for (Tweet tweet : allTweetsList) {
                                     System.out.println(tweet);
+                                }
 
                             // If the set of tweets by user is empty return that no tweets for this username were found.
                             } else if (tweetsByUserSet.size() == 0) {
@@ -174,8 +175,9 @@ public class TwitterSentimentRadar {
                             // Otherwise print out every tweet for the specific user.
                             } else {
                                 // Print out every tweet for each tweet in the set of all tweets by a user.
-                                for (Tweet userTweet : tweetsByUserSet)
+                                for (Tweet userTweet : tweetsByUserSet) {
                                     System.out.println(userTweet);
+                                }
                             }
 
                             break;
@@ -229,12 +231,13 @@ public class TwitterSentimentRadar {
 
                             break;
 
-                        // Get all occurrences of hashtags. Without checking for retweet relation (implemented later maybe).
+                        // Get all occurrences of hashtags. Without checking for retweet relation (implement maybe later).
                         case "3":
 
                             // Get the unsorted map of all hashtags.
                             Map<String, Integer> unsortedMapOfHashtags = services.getOccurrencesOfHashtags(services.getAllHashtags(tweetObjectsSet));
 
+                            // Sort.
                             int finalIMin = 1;
                             unsortedMapOfHashtags.entrySet().stream().filter(e -> e.getValue() >= finalIMin).sorted((e1, e2) ->
                             {
@@ -273,7 +276,7 @@ public class TwitterSentimentRadar {
 
                         case "6":
 
-                            // Listing and sorting of all tweets based on their use of hashtags. Tweets must have at least one HashTag.
+                            // Listing and sorting of all tweets based on their use of hashtags. Tweets must have at least one hashtag.
                             tweetObjectsSet.stream().filter(tweet -> tweet.getHashtags().size() > 0)
                                     .sorted((t1, t2) -> Integer.compare(t1.getHashtags().size(), t2.getHashtags().size()) * -1)
                                     .forEach(tweet -> System.out.println("(" + tweet.getHashtags().size() + ") \t " + tweet));
@@ -282,8 +285,7 @@ public class TwitterSentimentRadar {
 
                         default:
 
-                            // If not valid integer value is entered loop starts from the beginning (refers to while loop)
-                            // with exception catching.
+                            // If no valid integer value is entered loop starts from the beginning (refers to while loop) with exception catching.
                             System.err.println("No information available for this integer input. Try again.");
 
                     }
@@ -314,7 +316,7 @@ public class TwitterSentimentRadar {
     /**
      * Constructor expects file path and runs init() method to read in tweets and users from a CSV file.
      *
-     * @param filePath Path to the csv file which should be processed.
+     * @param filePath Path to the CSV file which should be processed.
      * @throws UIMAException If something goes wrong.
      */
     public TwitterSentimentRadar(String filePath) throws UIMAException {
@@ -328,9 +330,9 @@ public class TwitterSentimentRadar {
      * @throws UIMAException If something goes wrong.
      */
     public void init() throws UIMAException {
-        // Read in all tweets from the csv file with the help of the FileReaderHelper class.
+        // Read in all tweets from the CSV file with the help of the FileReaderHelper class.
         tweetObjectsSet = FileReaderHelper.convertReadInLines(filePath);
-        // Empty set of all username strings
+        // Empty set of all username strings.
         Set<String> usersNameStrings = new HashSet<>();
 
         // Get every username string for every tweet from the set of all tweet objects.
@@ -339,16 +341,14 @@ public class TwitterSentimentRadar {
 
         // For each username string in the set of all username strings do the following.
         for (String userNameString : usersNameStrings) {
-            // Filter out all tweets by a user from the set of all tweet objects which were read in with the help of
-            // the FileReaderHelper class before.
+            // Filter out all tweets by a user from the set of all tweet objects which were read in with the help of the FileReaderHelper class before.
             Set<Tweet> tweetsOfUserSet = tweetObjectsSet.stream().filter
                     (t -> t.getUser().equals(userNameString)).collect(Collectors.toSet());
 
             // Initialize a new user object everytime and insert the username string as parameter for username.
             UserImpl user = new UserImpl(userNameString);
 
-            // Add the set of all tweets by a user to the user object.
-            // The addMultipleTweetsToUser() method adds the tweets to a user.
+            // Add the set of all tweets by a user to the user object. The addMultipleTweetsToUser() method adds the tweets to a user.
             user.addMultipleTweetsToUser(tweetsOfUserSet);
 
             // Insert every single user object with a username and a set of tweets in the set of all user objects.

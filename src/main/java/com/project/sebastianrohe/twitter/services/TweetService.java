@@ -7,18 +7,18 @@ import java.util.*;
 public class TweetService {
 
     /**
-     * @param tweetSet
-     * @return Set of all users from tweets.
-     * @author Sebastian Rohe
      * This method takes a set of users and tweets and fills the user set with the user strings of every tweet.
      * Requires a set of tweets and a set of users.
+     *
+     * @param tweetSet A set of tweet objects.
+     * @return Set of all users from tweets.
      */
     public Set<String> getAllUsers(Set<Tweet> tweetSet) {
         Set<String> userSet = new HashSet<>();
 
         // For every tweet the user string gets added as element in user set.
         for (Tweet tweet : tweetSet) {
-            userSet.add(tweet.getUser()); // User gets added to userSet
+            userSet.add(tweet.getUser());
         }
 
         // Return resulting userSet.
@@ -26,11 +26,11 @@ public class TweetService {
     }
 
     /**
-     * @param tweetSet
-     * @return Average length of tweet content as double value.
-     * @author Sebastian Rohe
      * Method to calculate the average length of tweet content.
      * Requires a set of tweets and a set of users.
+     *
+     * @param tweetSet A set of tweet objects.
+     * @return Average length of tweet content as double value.
      */
     public double getAverageTweetLength(Set<Tweet> tweetSet) {
         // Sum of tweet contents is initialized with 0
@@ -49,10 +49,10 @@ public class TweetService {
     }
 
     /**
-     * @param tweetSet
-     * @return Average number of words in tweets.
-     * @author Sebastian Rohe
      * Method to calculate the average word count in tweets. Requires a set of tweets.
+     *
+     * @param tweetSet A set of tweet objects.
+     * @return Average number of words in tweets.
      */
     public double getAverageNumberOfWords(Set<Tweet> tweetSet) {
         // Number of words for all tweets is 0 at the start.
@@ -71,16 +71,22 @@ public class TweetService {
     }
 
     /**
-     * @param tweetSet
-     * @return Average number of hashtags in tweets.
-     * @author Sebastian Rohe
      * This method calculates the average number of hashtags of the tweets. It requires a set of tweets.
+     *
+     * @param tweetSet A set of tweet objects.
+     * @return Average number of hashtags in tweets.
      */
     public double getAverageNumberOfHashtags(List<String> usedHashtagsList, Set<Tweet> tweetSet) {
         // Calculate average number of used hashtags and return it.
         return usedHashtagsList.size() / (double) tweetSet.size();
     }
 
+    /**
+     * Method to get all hashtags from a set of tweets.
+     *
+     * @param tweetSet A set of tweet objects.
+     * @return List of hashtag strings.
+     */
     public List<String> getAllHashtags(Set<Tweet> tweetSet) {
         // Create empty List of hashtags.
         List<String> usedHashtags = new ArrayList<>();
@@ -97,6 +103,12 @@ public class TweetService {
     }
 
 
+    /**
+     * Method to count the occurrences of hashtags.
+     *
+     * @param listOfAllUsedHashtags List of all used hashtags.
+     * @return A map of hashtags with their number of occurrences.
+     */
     public Map<String, Integer> getOccurrencesOfHashtags(List<String> listOfAllUsedHashtags) {
         // hashmap to store the frequency of element
         Map<String, Integer> occurrencesHashMap = new HashMap<>();
@@ -108,6 +120,12 @@ public class TweetService {
         return occurrencesHashMap;
     }
 
+    /**
+     * Method to get users which twittered tweets above average length.
+     *
+     * @param tweetObjectSet A set of tweet objects.
+     * @return Set of username strings.
+     */
     public Set<String> getUsersTwitteringLongTweets(Set<Tweet> tweetObjectSet) {
         // Using TreeSet to get alphabetical order.
         Set<String> usersTwitteringLongTweets = new TreeSet<>();

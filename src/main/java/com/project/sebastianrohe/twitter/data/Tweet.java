@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Interface to represent tweet.
+ * Interface to represent a tweet.
  *
  * @author Sebastian Rohe
  */

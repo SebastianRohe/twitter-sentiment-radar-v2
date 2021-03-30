@@ -20,17 +20,17 @@ import java.util.Set;
 public class FileReaderHelper {
 
     /**
-     * This method reads in every line of a given csv file and converts it to a set of strings.
+     * This method reads in every line of a given CSV file and converts it to a set of strings.
      * Every string in the set represents a line of the original CSV file. Empty lines will be ignored.
      *
-     * @param filePath Path of csv file to read in.
-     * @return Set of strings from all read in lines.
+     * @param filePath Path of CSV file to read.
+     * @return Set of strings from all read lines.
      */
     public static Set<String> readInLineByLine(String filePath) {
-        // tweet strings. Every string represents a read in line from the csv file.
+        // Tweet strings. Every string represents a read line from the CSV file.
         Set<String> allReadInLines = new HashSet<>(0);
 
-        // Try to read in csv file from given file path and save every line as string in a set and return it.
+        // Try to read CSV file from given file path, save every line as string in a set and return it.
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
             String line = reader.readLine();
@@ -39,7 +39,7 @@ public class FileReaderHelper {
             while (line != null) {
                 // Add line string to readInLines set.
                 allReadInLines.add(line);
-                // Next line gets read in.
+                // Next line gets read.
                 line = reader.readLine();
             }
             // Close reader when all lines are read in.
@@ -48,27 +48,27 @@ public class FileReaderHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Return the set of all read in lines as set of strings.
+        // Return the set of all read lines as set of strings.
         return allReadInLines;
     }
 
     /**
-     * This method takes in the path of a csv file, processes the resulting set of line strings (every line represents a tweet)
+     * This method takes in the path of a CSV file, processes the resulting set of line strings (every line represents a tweet)
      * from the readInLineByLine() method and converts every line string to an actual tweet object. Every tweet is stored in a set.
      *
-     * @param filePath Path of csv file to read in.
+     * @param filePath Path of CSV file to read.
      * @return A set of all resulting tweet objects.
      */
     public static Set<Tweet> convertReadInLines(String filePath) throws UIMAException {
         // Empty set will get filled with tweets.
         Set<Tweet> actualTweets = new HashSet<>();
-        // Set with read in line strings from readInLineByLine() method.
+        // Set with read line strings from readInLineByLine() method.
         Set<String> tweetStrings = FileReaderHelper.readInLineByLine(filePath);
 
         // For each line string in the set we will execute following code.
         for (String tweetString : tweetStrings) {
-            // If length of the line string is not 0 and the string contains tabs it is split in different string
-            // parts with tabs as separators.
+            // If length of the line string is not 0 and the string contains tabs it is split in different string parts
+            // with tabs as separators.
             if (tweetString.length() != 0 && tweetString.contains("\t")) {
                 String[] splitLine = tweetString.split("\t");
                 // Create tweet objects with string values from split method.

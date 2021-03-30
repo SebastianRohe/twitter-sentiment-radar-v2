@@ -3,7 +3,7 @@ package com.project.sebastianrohe.twitter.data;
 import java.util.Set;
 
 /**
- * Interface to represent user.
+ * Interface to represent a user.
  *
  * @author Sebastian Rohe
  */

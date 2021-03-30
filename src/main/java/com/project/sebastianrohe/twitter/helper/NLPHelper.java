@@ -23,12 +23,12 @@ public class NLPHelper {
         // Creating a pipeline (for Linux)
         AggregateBuilder pipeline = new AggregateBuilder();
 
-        // Add different engines to the Pipeline
+        // Add different engines to the pipeline
         try {
             pipeline.add(createEngineDescription(SpaCyMultiTagger.class));
             pipeline.add(createEngineDescription(TextBlobSentiment.class));
 
-            // Create an AnalysisEngine for running the pipeline.
+            // Create an analysis engine for running the pipeline.
             this.analysisEngine = pipeline.createAggregate();
 
         } catch (ResourceInitializationException e) {

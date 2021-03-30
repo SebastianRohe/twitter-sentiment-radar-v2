@@ -30,13 +30,13 @@ public class NLPAnalysis {
      * @throws UIMAException If something goes wrong.
      */
     public Document runNLP(Document tweetDocument, AnalysisEngine analysisEngine) throws UIMAException {
-        // Create instance of TweetMongoDBImpl class to represent tweet as document from the com.project.sebastianrohe.twitter.database.
+        // Create instance of TweetMongoDBImpl class to represent tweet as document from the database.
         TweetMongoDBImpl tweetFromDatabase = new TweetMongoDBImpl(tweetDocument);
 
-        // Create JCas from tweet document from com.project.sebastianrohe.twitter.database.
+        // Create JCas from tweet document from twitter.database.
         JCas jCas = tweetFromDatabase.toJCas();
 
-        // Run com.project.sebastianrohe.twitter.analysis engine to analyse JCas.
+        // Run analysis engine to analyse JCas.
         SimplePipeline.runPipeline(jCas, analysisEngine);
 
         // Part to analyse for tokens.
